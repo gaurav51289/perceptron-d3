@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var w0 = 1;
+var w0 = 10;
 var w1 = -1;
 var w2 = 2;
 var classified = false;
@@ -22,7 +22,7 @@ linePointsJSON(w0, w1, w2);
 
 //All GET methods...........................//
 app.get('/', function(req, res){
-  var w0 = 1;
+  var w0 = 10;
   var w1 = -1;
   var w2 = 2;
   linePointsJSON(w0, w1, w2);
