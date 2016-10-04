@@ -19,13 +19,13 @@ var file = './public/data/line.json';
 jsonfile.writeFileSync(file, []);
 
 //-----------------------------------GENERATION POINTS----------------------------//
-generatePoints(20);
+generatePoints(100);
 function generatePoints(numberOfPoints){
   var i = 0;
-  var line_x1 = -200;
-  var line_y1 = -400.4;
-  var line_x2 = 200;
-  var line_y2 = 399.6;
+  var line_x1 = -2;
+  var line_y1 = -4;
+  var line_x2 = 2;
+  var line_y2 = 4;
 
   var dataPointsJSON = [];
 

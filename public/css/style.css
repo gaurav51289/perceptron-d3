@@ -30,13 +30,15 @@ body {
 
 
 #table{
-  width: 25%;
-  margin-left: 72%;
+  width: 10%;
+  margin-left: 85%;
   height: 600px;
+  font-size: 17px;
   border-style: solid;
   position: absolute;
   overflow-y: scroll;
 }
+
 
 .itr{
   font-size: 20px;

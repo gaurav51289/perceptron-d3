@@ -14,7 +14,11 @@
 
 <div id="chart">
 </div>
-<div id="table"></div>
+
+<div id="table">
+  <h3><strong>Data Set</strong></h3>
+  <h4><strong>[1, x2, f(x)]</strong></h4>
+</div>
 
 
 <script>
@@ -75,8 +79,8 @@ d3.json("data/update.json", function(error, data) {
     });
 
   // scale the range of the data
-  x1Scale.domain([0, d3.max(data, x1Value)+100]);
-  x2Scale.domain([0, d3.max(data, x2Value)+100]);
+  x1Scale.domain([0, d3.max(data, x1Value)]);
+  x2Scale.domain([0, d3.max(data, x2Value)]);
 
 
 
@@ -89,7 +93,8 @@ d3.json("data/update.json", function(error, data) {
       .attr("class", "label")
       .attr("x", width)
       .attr("y", -6)
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .text("X1");
 
   // x2-axis
   svg.append("g")
@@ -100,7 +105,8 @@ d3.json("data/update.json", function(error, data) {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .style("text-anchor", "end");
+      .style("text-anchor", "end")
+      .text("X2");
 
 
 // draw dots
@@ -173,7 +179,7 @@ svg.selectAll(".dot")
         .attr("y1", function(d) { return x2Scale(d.Y1); })
         .attr("x2", function(d) { return x1Scale(d.X2); })
         .attr("y2", function(d) { return x2Scale(d.Y2); })
-        .attr("stroke", "green")
+        .attr("stroke", "blue")
         .attr("stroke-width", 2);
       });
 
@@ -198,6 +204,30 @@ svg.selectAll(".dot")
         .attr("x2", function(d) { return x1Scale(d.X2); })
         .attr("y2", function(d) { return x2Scale(d.Y2); })
         .attr("stroke", "red")
+        .attr("stroke-width", 2);
+      });
+
+      d3.json("data/targetline.json", function(error, data) {
+        data.forEach(function(d) {
+            d.X1 = +d.X1;
+            d.Y1 = +d.Y1;
+            d.X2 = +d.X2;
+            d.Y2 = +d.Y2;
+        });
+
+        var line = svg.selectAll(".targetline")
+        .data(data);
+
+
+
+        line.enter()
+        .append("line")
+        .attr("class", "targetline")
+        .attr("x1", function(d) { return x1Scale(d.X1); })
+        .attr("y1", function(d) { return x2Scale(d.Y1); })
+        .attr("x2", function(d) { return x1Scale(d.X2); })
+        .attr("y2", function(d) { return x2Scale(d.Y2); })
+        .attr("stroke", "green")
         .attr("stroke-width", 2);
       });
 
@@ -234,6 +264,9 @@ d3.json("data/update.json", function(error, data) {
 <br/>
 <div>
   <label class="itr"><strong>Iteration : </strong><%= itr%></label>
+</div>
+<div>
+  <label class="itr"><strong>Current vector W : </strong>[ <%= w0%>, <%= w1%>, <%= w2%> ]</label>
 </div>
 
 </body>
