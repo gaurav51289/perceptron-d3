@@ -37,3 +37,7 @@ body {
   position: absolute;
   overflow-y: scroll;
 }
+
+.itr{
+  font-size: 20px;
+}

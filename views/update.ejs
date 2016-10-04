@@ -15,12 +15,7 @@
 <div id="chart">
 </div>
 <div id="table"></div>
-<div id="button">
-  <a href="/"><button>Reset</button></a>
-</div>
-<div id="button">
-  <a href="/update"><button>Next Iteration</button></a>
-</div>
+
 
 <script>
 // set the dimensions of the canvas
@@ -178,10 +173,33 @@ svg.selectAll(".dot")
         .attr("y1", function(d) { return x2Scale(d.Y1); })
         .attr("x2", function(d) { return x1Scale(d.X2); })
         .attr("y2", function(d) { return x2Scale(d.Y2); })
-        .attr("stroke", "red")
+        .attr("stroke", "green")
         .attr("stroke-width", 2);
       });
 
+      d3.json("data/oldline.json", function(error, data) {
+        data.forEach(function(d) {
+            d.X1 = +d.X1;
+            d.Y1 = +d.Y1;
+            d.X2 = +d.X2;
+            d.Y2 = +d.Y2;
+        });
+
+        var line = svg.selectAll(".oldline")
+        .data(data);
+
+
+
+        line.enter()
+        .append("line")
+        .attr("class", "oldline")
+        .attr("x1", function(d) { return x1Scale(d.X1); })
+        .attr("y1", function(d) { return x2Scale(d.Y1); })
+        .attr("x2", function(d) { return x1Scale(d.X2); })
+        .attr("y2", function(d) { return x2Scale(d.Y2); })
+        .attr("stroke", "red")
+        .attr("stroke-width", 2);
+      });
 
 
   });
@@ -207,6 +225,15 @@ d3.json("data/update.json", function(error, data) {
 
 </script>
 
-
+<div id="button">
+  <a href="/"><button>Reset</button></a>
+</div>
+<div id="button">
+  <a href="/update"><button>Next Iteration</button></a>
+</div>
+<br/>
+<div>
+  <label class="itr"><strong>Iteration : </strong><%= itr%></label>
+</div>
 
 </body>

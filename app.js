@@ -12,21 +12,70 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var w0 = 10;
-var w1 = -1;
-var w2 = 2;
-var classified = false;
-linePointsJSON(w0, w1, w2);
+var w0; var w1; var w2;
+var iteration = 0;
+var jsonfile = require('jsonfile');
+var file = './public/data/line.json';
+jsonfile.writeFileSync(file, []);
 
+//-----------------------------------GENERATION POINTS----------------------------//
+generatePoints(20);
+function generatePoints(numberOfPoints){
+  var i = 0;
+  var line_x1 = -200;
+  var line_y1 = -400.4;
+  var line_x2 = 200;
+  var line_y2 = 399.6;
 
+  var dataPointsJSON = [];
+
+  while(i < numberOfPoints){
+    var new_x = getRandomInt(0,200);
+    var new_y= getRandomInt(0,200);
+    var new_D;
+
+    var d = (new_x - line_x1)*(line_y2-line_y1) - (new_y - line_y1)*(line_x2 - line_x1);
+    if(d == 0){
+
+    }else if(d < 0) {
+      new_D = -1;
+    }else if(d > 0){
+      new_D = 1;
+    }
+
+    var obj = {
+      "X1":new_x,
+      "X2":new_y,
+      "D":new_D
+   }
+
+   dataPointsJSON.push(obj);
+   i++;
+  }
+
+  var jsonfile = require('jsonfile');
+  var file = './public/data/update.json';
+  jsonfile.writeFileSync(file, dataPointsJSON);
+}
+
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+//-----------------------------------END GENERATION POINTS----------------------------//
 
 //All GET methods...........................//
 app.get('/', function(req, res){
-  var w0 = 10;
-  var w1 = -1;
-  var w2 = 2;
-  linePointsJSON(w0, w1, w2);
-  res.render('update', {});
+  w0 = 10;
+  w1 = 10;
+  w2 = 50;
+  var obj = linePointsJSON(w0, w1, w2);
+  var jsonfile = require('jsonfile');
+  var file = './public/data/oldline.json';
+  iteration = 0;
+  jsonfile.writeFileSync(file, obj);
+  res.render('update', {itr:iteration, w0 : w0, w1:w1, w2:w2});
 });
 
 
@@ -34,15 +83,13 @@ app.get('/update', function(req, res){
 
       classifyPoints();
 
-
-  res.render('update', {});
+  res.render('update', {itr:iteration, w0 : w0, w1:w1, w2:w2});
 });
 
 function classifyPoints(){
   var jsonfile = require('jsonfile');
   var file = './public/data/update.json';
   var dataJSON = jsonfile.readFileSync(file);
-  var classified = true;
     for(i = 0;i < dataJSON.length; i++){
       var x1 = dataJSON[i].X1;
       var x2 = dataJSON[i].X2;
@@ -54,13 +101,13 @@ function classifyPoints(){
         w0 = w0 + (d)*1;
         w1 = w1 + (d)*x1;
         w2 = w2 + (d)*x2;
-        linePointsJSON(w0, w1, w2);
-        classified = false;
+        var obj = linePointsJSON(w0, w1, w2);
+        var jsonfile = require('jsonfile');
+        var file = './public/data/line.json';
+        jsonfile.writeFileSync(file, obj);
+        iteration = iteration + 1;
         break;
-      }else{
-        console.log("Done"+i);
       }
-      console.log(classified);;
     }
 }
 
@@ -79,11 +126,9 @@ function linePointsJSON(w0, w1, w2){
     var x2 = (-1)*(w0/w1);
     var y2 = ((-1)/w2)*((x2*w1)+w0);
 
-    var point1 = pointAtX([x1,y1], [x2, y2] , -1000);
-    var point2 = pointAtX([x1,y1], [x2, y2], 1000);
+    var point1 = pointAtX([x1,y1], [x2, y2] , -200);
+    var point2 = pointAtX([x1,y1], [x2, y2], 200);
 
-    var jsonfile = require('jsonfile');
-    var file = './public/data/line.json';
     var obj = [
                 {
                   "X1":point1[0],
@@ -92,9 +137,8 @@ function linePointsJSON(w0, w1, w2){
                   "Y2":point2[1]
                }
              ];
-    jsonfile.writeFileSync(file, obj);
 
-
+    return obj;
 };
 
 function pointAtX(a, b, x) {
